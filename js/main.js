@@ -66,6 +66,13 @@ mainPin.addEventListener('click', function () {
   }
   var headerUpload = document.querySelector('.ad-form-header__input');
   headerUpload.disabled = false;
-  var filters = document.querySelector('map__filters');
-  filters.classList.
+  var filters = document.querySelectorAll('.map__filter');
+  for (var i = 0; i < filters.length; i++) {
+    filters[i].disabled = false;
+  }
 });
+
+mainPin.addEventListener('mouseup', function () {
+  var adress = document.querySelector('#address');
+  adress.value = 'kek';
+})
