@@ -55,7 +55,8 @@ var pins = {
 };
 
 var mainPin = document.querySelector('.map__pin--main');
-mainPin.addEventListener('click', function () {
+
+mainPin.addEventListener('click', function () { // убираем disabled у всех полей форм
   var map = document.querySelector('.map');
   map.classList.remove('map--faded');
   var form = document.querySelector('.ad-form');
@@ -67,12 +68,33 @@ mainPin.addEventListener('click', function () {
   var headerUpload = document.querySelector('.ad-form-header__input');
   headerUpload.disabled = false;
   var filters = document.querySelectorAll('.map__filter');
-  for (var i = 0; i < filters.length; i++) {
+  for (i = 0; i < filters.length; i++) {
     filters[i].disabled = false;
   }
+  pins.generateObjectives();
+  pins.createElements();
+  pins.addFragment(mapPin); // Вопрос, как отрисовать единожды пины, когда класс map--faded убирается с карты?
 });
 
-mainPin.addEventListener('mouseup', function () {
-  var adress = document.querySelector('#address');
-  adress.value = 'kek';
-})
+function getCoords(elem) { // находим координаты элемента на странице
+  var box = elem.getBoundingClientRect();
+
+  return {
+    top: box.top + pageYOffset,
+    left: box.left + pageXOffset
+  };
+}
+
+var MAIN_PIN_SIZES = { // размеры большого пина
+  width: 156,
+  height: 156
+};
+
+var pinBox = mainPin.children[1]; // находим большой пин
+
+var adress = document.querySelector('#address');
+var mainPinCoords = getCoords(pinBox);
+adress.value = Math.round(mainPinCoords.top + MAIN_PIN_SIZES.height / 2) + ',' + Math.round(mainPinCoords.left + MAIN_PIN_SIZES.width / 2); // добавляем координаты центра большого пина в поле адрес
+
+mainPin.addEventListener('mouseup', function () { // здесь я не понял, что добавлять, если перетаскивать пин мы пока не можем, тогда откуда брать координаты
+});
