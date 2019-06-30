@@ -1,14 +1,20 @@
 'use strict';
 
 var PIN_NUMBER = 8; // количество объектов, которое нужно создать
+var MAIN_PIN_SIZES = { // размеры большого пина
+  width: 156,
+  height: 156
+};
+var shouldRenderPins = true;
 var appartments = ['palace', 'flat', 'house', 'bungalo']; // массив с видами жилья
-var MapWidth = document.querySelector('.map').offsetWidth; // находим ширину блока .map
+var map = document.querySelector('.map');
+var mapWidth = map.offsetWidth;
 var templatePin = document.querySelector('#pin').content.querySelector('button');
 var mapPin = document.querySelector('.map__pins');
 var fragment = document.createDocumentFragment();
 
 var makeOffer = function (massive, min, max) { // создает рандомный номер массива с видами жилья
-  return massive[Math.floor(Math.random() * (max - min)) + min];
+  return massive[makeRandomNum(min, max)];
 };
 
 var makeRandomNum = function (min, max) { // создает рандомное число в диапазоне min - max
@@ -17,47 +23,46 @@ var makeRandomNum = function (min, max) { // создает рандомное �
   return rand;
 };
 
-var objArray = []; // массив куда будем записывать сгенерированные объекты
-
-var pins = {
-  generateObjectives: function () {
-
-    for (var i = 0; i < PIN_NUMBER; i++) { // генерируем объекты и пушим их в массив objArray
-      var somePin = {
-        'author': {
-          'avatar': 'img/avatars/user0' + (i + 1) + '.png'
-        },
-        'offer': {
-          'type': makeOffer(appartments, 0, appartments.length - 1)
-        },
-
-        'location': {
-          'x': makeRandomNum(0, MapWidth),
-          'y': makeRandomNum(130, 630)
-        }
-      };
-      objArray.push(somePin);
-    }
-  },
-  createElements: function () {
-    for (var i = 0; i < objArray.length; i++) {
-      var element = templatePin.cloneNode(true);
-      element.style.left = objArray[i].location.x - 25 + 'px';
-      element.style.top = objArray[i].location.y - 70 + 'px';
-      element.querySelector('img').src = objArray[i].author.avatar;
-      element.querySelector('img').alt = 'заголовок объявления';
-      fragment.appendChild(element);
-    }
-  },
-  addFragment: function (element) {
-    element.appendChild(fragment);
+var generateObjectives = function () {
+  var tempArray = [];
+  for (var i = 0; i < PIN_NUMBER; i++) { // генерируем объекты и пушим их в массив objArray
+    var somePin = {
+      'author': {
+        'avatar': 'img/avatars/user0' + (i + 1) + '.png'
+      },
+      'offer': {
+        'type': makeOffer(appartments, 0, appartments.length - 1)
+      },
+      'location': {
+        'x': makeRandomNum(0, mapWidth),
+        'y': makeRandomNum(130, 630)
+      }
+    };
+    tempArray.push(somePin);
   }
+  return tempArray;
+};
+
+var objArray = generateObjectives(); // массив куда будем записывать сгенерированные объекты
+
+var createElements = function () {
+  for (var i = 0; i < objArray.length; i++) {
+    var element = templatePin.cloneNode(true);
+    element.style.left = objArray[i].location.x - 25 + 'px';
+    element.style.top = objArray[i].location.y - 70 + 'px';
+    element.querySelector('img').src = objArray[i].author.avatar;
+    element.querySelector('img').alt = 'заголовок объявления';
+    fragment.appendChild(element);
+  }
+};
+
+var addFragment = function (element) {
+  element.appendChild(fragment);
 };
 
 var mainPin = document.querySelector('.map__pin--main');
 
-mainPin.addEventListener('click', function () { // убираем disabled у всех полей форм
-  var map = document.querySelector('.map');
+var openMap = function () {
   map.classList.remove('map--faded');
   var form = document.querySelector('.ad-form');
   form.classList.remove('ad-form--disabled');
@@ -71,24 +76,27 @@ mainPin.addEventListener('click', function () { // убираем disabled у в
   for (i = 0; i < filters.length; i++) {
     filters[i].disabled = false;
   }
-  pins.generateObjectives();
-  pins.createElements();
-  pins.addFragment(mapPin); // Вопрос, как отрисовать единожды пины, когда класс map--faded убирается с карты?
-});
+};
+
+var onMainPinClickHandler = function () { // делает доступной карту и форму + отрисовывает пины
+  openMap();
+  if (shouldRenderPins) {
+    generateObjectives();
+    createElements();
+    addFragment(mapPin);
+    shouldRenderPins = false;
+  }
+};
+
+mainPin.addEventListener('click', onMainPinClickHandler); // убираем disabled у всех полей форм
 
 function getCoords(elem) { // находим координаты элемента на странице
   var box = elem.getBoundingClientRect();
-
   return {
     top: box.top + pageYOffset,
     left: box.left + pageXOffset
   };
 }
-
-var MAIN_PIN_SIZES = { // размеры большого пина
-  width: 156,
-  height: 156
-};
 
 var pinBox = mainPin.children[1]; // находим большой пин
 
@@ -96,5 +104,48 @@ var adress = document.querySelector('#address');
 var mainPinCoords = getCoords(pinBox);
 adress.value = Math.round(mainPinCoords.top + MAIN_PIN_SIZES.height / 2) + ',' + Math.round(mainPinCoords.left + MAIN_PIN_SIZES.width / 2); // добавляем координаты центра большого пина в поле адрес
 
-mainPin.addEventListener('mouseup', function () { // здесь я не понял, что добавлять, если перетаскивать пин мы пока не можем, тогда откуда брать координаты
+mainPin.addEventListener('mouseup', function () {
 });
+
+var selectType = document.querySelector('#type');
+var inputPrice = document.querySelector('#price');
+
+var selectTypeChangeHandler = function () {
+  var selectedOption = selectType.options.selectedIndex;
+  if (selectedOption === 0) {
+    inputPrice.placeholder = '0';
+    inputPrice.min = '0';
+  } else if (selectedOption === 1) {
+    inputPrice.placeholder = '1000';
+    inputPrice.min = '1000';
+  } else if (selectedOption === 2) {
+    inputPrice.placeholder = '5000';
+    inputPrice.min = '5000';
+  } else if (selectedOption === 3) {
+    inputPrice.placeholder = '10000';
+    inputPrice.min = '10000';
+  }
+};
+selectType.addEventListener('change', selectTypeChangeHandler);
+
+var selectTimeIn = document.querySelector('#timein');
+var selectTimeOut = document.querySelector('#timeout');
+
+var selectInChangeHandler = function () {
+  for (var i = 0; i < selectTimeIn.length; i++) {
+    if (selectTimeIn[i].selected) {
+      selectTimeOut[i].selected = true;
+    }
+  }
+};
+
+var selectOutChangeHandler = function () {
+  for (var i = 0; i < selectTimeOut.length; i++) {
+    if (selectTimeOut[i].selected) {
+      selectTimeIn[i].selected = true;
+    }
+  }
+};
+
+selectTimeIn.addEventListener('change', selectInChangeHandler); // наверно есть более простая логика для реализации, хотелось бы узнать, какая :)
+selectTimeOut.addEventListener('change', selectOutChangeHandler);
