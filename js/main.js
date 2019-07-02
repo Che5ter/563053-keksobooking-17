@@ -78,7 +78,7 @@ var openMap = function () {
   }
 };
 
-var onMainPinClickHandler = function () { // делает доступной карту и форму + отрисовывает пины
+var onMainPinMousedownHandler = function () { // делает доступной карту и форму + отрисовывает пины
   openMap();
   if (shouldRenderPins) {
     generateObjectives();
@@ -88,7 +88,48 @@ var onMainPinClickHandler = function () { // делает доступной к�
   }
 };
 
-mainPin.addEventListener('click', onMainPinClickHandler); // убираем disabled у всех полей форм
+ // mainPin.addEventListener('click', onMainPinClickHandler); // убираем disabled у всех полей форм
+
+mainPin.addEventListener('mousedown', function(evt) {
+  openMap();
+  if (shouldRenderPins) {
+    generateObjectives();
+    createElements();
+    addFragment(mapPin);
+    shouldRenderPins = false;
+  }
+
+  var startCoords = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+
+  var onMainPinMousemoveHandler = function (moveEvt) {
+    moveEvt.preventDefault();
+    var shift = {
+      x: startCoords.x - moveEvt.clientX,
+      y: startCoords.y - moveEvt.clientY
+    };
+
+    startCoords = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    };
+
+    mainPin.style.top = (mainPin.offsetTop - shift.y) + 'px';
+    mainPin.style.left = (mainPin.offsetLeft - shift.x) + 'px';
+  };
+
+  var onMainPinMouseupHandler = function (upEvt) {
+    upEvt.preventDefault();
+
+    document.removeEventListener('mousemove', onMainPinMousemoveHandler);
+    document.removeEventListener('mouseup', onMainPinMouseupHandler);
+  };
+
+  document.addEventListener('mousemove', onMainPinMousemoveHandler);
+  document.addEventListener('mouseup', onMainPinMouseupHandler);
+});
 
 function getCoords(elem) { // находим координаты элемента на странице
   var box = elem.getBoundingClientRect();
