@@ -1,7 +1,7 @@
 'use strict';
 
 var PIN_NUMBER = 8; // количество объектов, которое нужно создать
-var MAIN_PIN_SIZES = { // размеры большого пина
+var MainPinSizes = { // размеры большого пина
   width: 156,
   height: 156
 };
@@ -78,18 +78,6 @@ var openMap = function () {
   }
 };
 
-var onMainPinClickHandler = function () { // делает доступной карту и форму + отрисовывает пины
-  openMap();
-  if (shouldRenderPins) {
-    generateObjectives();
-    createElements();
-    addFragment(mapPin);
-    shouldRenderPins = false;
-  }
-};
-
-mainPin.addEventListener('click', onMainPinClickHandler); // убираем disabled у всех полей форм
-
 function getCoords(elem) { // находим координаты элемента на странице
   var box = elem.getBoundingClientRect();
   return {
@@ -102,30 +90,66 @@ var pinBox = mainPin.children[1]; // находим большой пин
 
 var adress = document.querySelector('#address');
 var mainPinCoords = getCoords(pinBox);
-adress.value = Math.round(mainPinCoords.top + MAIN_PIN_SIZES.height / 2) + ',' + Math.round(mainPinCoords.left + MAIN_PIN_SIZES.width / 2); // добавляем координаты центра большого пина в поле адрес
+adress.value = Math.round(mainPinCoords.top + MainPinSizes.height / 2) + ',' + Math.round(mainPinCoords.left + MainPinSizes.width / 2); // добавляем координаты центра большого пина в поле адрес
 
-mainPin.addEventListener('mouseup', function () {
+mainPin.addEventListener('mousedown', function (evt) {
+  openMap();
+
+  var startCoords = {
+    x: evt.pageX,
+    y: evt.pageY
+  };
+
+  var onMainPinMousemoveHandler = function (moveEvt) {
+    var shift = {
+      x: startCoords.x - moveEvt.pageX,
+      y: startCoords.y - moveEvt.pageY
+    };
+
+    startCoords = {
+      x: moveEvt.pageX,
+      y: moveEvt.pageY
+    };
+    if (startCoords.x >= 0 && startCoords.x <= 1200) {
+      mainPin.style.top = (mainPin.offsetTop - shift.y) + 'px';
+    }
+    if (startCoords.y >= 130 && startCoords.y <= 630) {
+      mainPin.style.left = (mainPin.offsetLeft - shift.x) + 'px';
+    }
+    mainPinCoords = getCoords(mainPin);
+    adress.value = Math.round(mainPinCoords.top) + ',' + Math.round(mainPinCoords.left);
+  };
+
+  var onMainPinMouseupHandler = function () {
+    if (shouldRenderPins) {
+      generateObjectives();
+      createElements();
+      addFragment(mapPin);
+      shouldRenderPins = false;
+    }
+    document.removeEventListener('mousemove', onMainPinMousemoveHandler);
+    document.removeEventListener('mouseup', onMainPinMouseupHandler);
+  };
+
+  document.addEventListener('mousemove', onMainPinMousemoveHandler);
+  document.addEventListener('mouseup', onMainPinMouseupHandler);
 });
 
 var selectType = document.querySelector('#type');
 var inputPrice = document.querySelector('#price');
 
-var selectTypeChangeHandler = function () {
-  var selectedOption = selectType.options.selectedIndex;
-  if (selectedOption === 0) {
-    inputPrice.placeholder = '0';
-    inputPrice.min = '0';
-  } else if (selectedOption === 1) {
-    inputPrice.placeholder = '1000';
-    inputPrice.min = '1000';
-  } else if (selectedOption === 2) {
-    inputPrice.placeholder = '5000';
-    inputPrice.min = '5000';
-  } else if (selectedOption === 3) {
-    inputPrice.placeholder = '10000';
-    inputPrice.min = '10000';
-  }
+var typePriceMap = {
+  'bungalo': 0,
+  'flat': 1000,
+  'house': 5000,
+  'palace': 10000
 };
+
+var selectTypeChangeHandler = function () {
+  inputPrice.placeholder = typePriceMap[selectType.value];
+  inputPrice.min = typePriceMap[selectType.value];
+};
+
 selectType.addEventListener('change', selectTypeChangeHandler);
 
 var selectTimeIn = document.querySelector('#timein');
