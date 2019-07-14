@@ -1,10 +1,10 @@
 'use strict';
 (function () {
-  var appartments = ['palace', 'flat', 'house', 'bungalo']; // массив с видами жилья
+  // var appartments = ['palace', 'flat', 'house', 'bungalo']; // массив с видами жилья
   var templatePin = document.querySelector('#pin').content.querySelector('button');
   var fragment = document.createDocumentFragment();
 
-  window.generateObjectives = function () {
+  /* var generateObjectives = function () {
     var tempArray = [];
     for (var i = 0; i < window.data.PIN_NUMBER; i++) { // генерируем объекты и пушим их в массив objArray
       var somePin = {
@@ -22,22 +22,29 @@
       tempArray.push(somePin);
     }
     return tempArray;
-  };
+  }; */
 
-  var objArray = window.generateObjectives(); // массив куда будем записывать сгенерированные объекты
+  // var objArray = generateObjectives(); // массив куда будем записывать сгенерированные объекты
 
-  window.createElements = function () {
-    for (var i = 0; i < objArray.length; i++) {
+  var onSuccess = function (description) {
+    for (var i = 0; i < description.length; i++) {
       var element = templatePin.cloneNode(true);
-      element.style.left = objArray[i].location.x - 25 + 'px';
-      element.style.top = objArray[i].location.y - 70 + 'px';
-      element.querySelector('img').src = objArray[i].author.avatar;
+      element.style.left = description[i].location.x - 25 + 'px';
+      element.style.top = description[i].location.y - 70 + 'px';
+      element.querySelector('img').src = description[i].author.avatar;
       element.querySelector('img').alt = 'заголовок объявления';
       fragment.appendChild(element);
     }
   };
 
-  window.addFragment = function (element) {
+  var addFragment = function (element) {
     element.appendChild(fragment);
+  };
+
+  window.card = {
+    // generateObjectives: generateObjectives,
+    // objArray: objArray,
+    onSuccess: onSuccess,
+    addFragment: addFragment
   };
 })();
