@@ -35,8 +35,7 @@
     var onMainPinMouseupHandler = function () {
       if (shouldRenderPins) {
         // window.card.generateObjectives();
-        window.load(window.card.onSuccess);
-        window.card.addFragment(window.data.mapPin);
+        window.load(window.card.onSuccess, window.card.onError);
         shouldRenderPins = false;
       }
       document.removeEventListener('mousemove', onMainPinMousemoveHandler);

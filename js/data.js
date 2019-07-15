@@ -5,6 +5,7 @@
   var map = document.querySelector('.map');
   var mapPin = document.querySelector('.map__pins');
   var adress = document.querySelector('#address');
+  var mainDocument = document.querySelector('main');
 
   window.data = {
     PIN_NUMBER: 8, // количество объектов, которое нужно создать
@@ -24,6 +25,7 @@
     adress: adress,
     mapPin: mapPin,
     mainPin: mainPin,
+    mainDocument: mainDocument,
     mapWidth: map.offsetWidth, // ширина карты
     makeRandomNum: function (min, max) { // создает рандомное число в диапазоне min - max
       var rand = min + Math.random() * (max + 1 - min);
