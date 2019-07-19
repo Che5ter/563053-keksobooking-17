@@ -4,28 +4,20 @@
   var templatePin = document.querySelector('#pin').content.querySelector('button');
   var fragment = document.createDocumentFragment();
   var templateError = document.querySelector('#error').content.querySelector('.error');
+  var pins = [];
 
-  /* var generateObjectives = function () {
-    var tempArray = [];
-    for (var i = 0; i < window.data.PIN_NUMBER; i++) { // генерируем объекты и пушим их в массив objArray
-      var somePin = {
-        'author': {
-          'avatar': 'img/avatars/user0' + (i + 1) + '.png'
-        },
-        'offer': {
-          'type': window.data.getRandomValuefromArray(appartments)
-        },
-        'location': {
-          'x': window.data.makeRandomNum(0, window.data.mapWidth),
-          'y': window.data.makeRandomNum(window.data.MapRestrictions.TOP, window.data.MapRestrictions.BOTTOM)
-        }
-      };
-      tempArray.push(somePin);
-    }
-    return tempArray;
-  }; */
-
-  // var objArray = generateObjectives(); // массив куда будем записывать сгенерированные объекты
+  var updatePins = function () {
+    var sameTypeFlat = pins.filter(function (it) {
+      return it.type === 'flat';
+    });
+    var sameTypeBungalo = pins.filter(function (it) {
+      return it.type === 'bungalo';
+    });
+    var sameTypeHouse = pins.filter(function (it) {
+      return it.type === 'house';
+    });
+    createElements()
+  };
 
   var createElements = function (objArray) {
     for (var i = 0; i < objArray.length; i++) {
@@ -53,7 +45,8 @@
   };
 
   var onSuccess = function (data) {
-    createElements(data);
+    pins = data.slice(0, 5);
+    createElements(pins);
     addFragment(window.data.mapPin);
   };
 
