@@ -5,29 +5,45 @@
   var fragment = document.createDocumentFragment();
   var templateError = document.querySelector('#error').content.querySelector('.error');
   var pins = [];
+  var housingType = document.querySelector('#housing-type');
+  var firstPins = [];
 
-  var updatePins = function () {
-    var sameTypeFlat = pins.filter(function (it) {
-      return it.type === 'flat';
+  var updatePins = function (element) {
+    var sameType = pins.filter(function (it) {
+      return it.offer.type === element;
     });
-    var sameTypeBungalo = pins.filter(function (it) {
-      return it.type === 'bungalo';
-    });
-    var sameTypeHouse = pins.filter(function (it) {
-      return it.type === 'house';
-    });
-    createElements()
+    deletePins();
+    createElements(sameType, window.data.mapPin);
   };
 
-  var createElements = function (objArray) {
+  var deletePins = function () {
+    var allPins = document.querySelectorAll('.generated-pin');
+    console.log(allPins);
+  };
+
+  housingType.addEventListener('change', function (evt) {
+    if (evt.target.options[0].selected) {
+      createElements(pins, window.data.mapPin);
+    } else if (evt.target.options[2].selected) {
+      updatePins('flat');
+    } else if (evt.target.options[3].selected) {
+      updatePins('house');
+    } else if (evt.target.options[4].selected) {
+      updatePins('bungalo');
+    }
+  });
+
+  var createElements = function (objArray, el) {
     for (var i = 0; i < objArray.length; i++) {
       var element = templatePin.cloneNode(true);
       element.style.left = objArray[i].location.x - 25 + 'px';
       element.style.top = objArray[i].location.y - 70 + 'px';
+      element.classList.add('generated-pin');
       element.querySelector('img').src = objArray[i].author.avatar;
       element.querySelector('img').alt = 'заголовок объявления';
       fragment.appendChild(element);
     }
+    addFragment(el);
   };
 
   var createErrorBlock = function () {
@@ -45,9 +61,9 @@
   };
 
   var onSuccess = function (data) {
-    pins = data.slice(0, 5);
-    createElements(pins);
-    addFragment(window.data.mapPin);
+    pins = data;
+    firstPins = data.slice(0, 5);
+    createElements(firstPins, window.data.mapPin);
   };
 
   var onError = function () {
