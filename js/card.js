@@ -1,41 +1,56 @@
 'use strict';
 (function () {
-  // var appartments = ['palace', 'flat', 'house', 'bungalo']; // массив с видами жилья
   var templatePin = document.querySelector('#pin').content.querySelector('button');
   var fragment = document.createDocumentFragment();
   var templateError = document.querySelector('#error').content.querySelector('.error');
+  var pins = [];
+  var housingType = document.querySelector('#housing-type');
+  var firstPins = [];
 
-  /* var generateObjectives = function () {
-    var tempArray = [];
-    for (var i = 0; i < window.data.PIN_NUMBER; i++) { // генерируем объекты и пушим их в массив objArray
-      var somePin = {
-        'author': {
-          'avatar': 'img/avatars/user0' + (i + 1) + '.png'
-        },
-        'offer': {
-          'type': window.data.getRandomValuefromArray(appartments)
-        },
-        'location': {
-          'x': window.data.makeRandomNum(0, window.data.mapWidth),
-          'y': window.data.makeRandomNum(window.data.MapRestrictions.TOP, window.data.MapRestrictions.BOTTOM)
-        }
-      };
-      tempArray.push(somePin);
+  var updatePins = function (element) { // функция для обновления пинов на странице при фильтрации
+    var sameType = pins.filter(function (it) {
+      return it.offer.type === element;
+    });
+    sameType = sameType.slice(0, 5);
+    deletePins('.generated-pin');
+    createElements(sameType, window.data.mapPin);
+  };
+
+  var deletePins = function (someArray) { // функция для удаления пинов на странице
+    var allPins = document.querySelectorAll(someArray);
+    allPins.forEach(function (element) {
+      element.parentNode.removeChild(element);
+    });
+  };
+
+  var onSectionChangeHandler = function (evt) {
+    if (evt.target.options[0].selected) {
+      deletePins('.generated-pin');
+      createElements(firstPins, window.data.mapPin);
+    } else if (evt.target.options[1].selected) {
+      updatePins('palace');
+    } else if (evt.target.options[2].selected) {
+      updatePins('flat');
+    } else if (evt.target.options[3].selected) {
+      updatePins('house');
+    } else if (evt.target.options[4].selected) {
+      updatePins('bungalo');
     }
-    return tempArray;
-  }; */
+  };
 
-  // var objArray = generateObjectives(); // массив куда будем записывать сгенерированные объекты
+  housingType.addEventListener('change', onSectionChangeHandler);// отлавливаем событие изменения на section и отображаем соответствующие пины
 
-  var createElements = function (objArray) {
+  var createElements = function (objArray, el) { // создаем и отрисовываем пины на страницу
     for (var i = 0; i < objArray.length; i++) {
       var element = templatePin.cloneNode(true);
       element.style.left = objArray[i].location.x - 25 + 'px';
       element.style.top = objArray[i].location.y - 70 + 'px';
+      element.classList.add('generated-pin');
       element.querySelector('img').src = objArray[i].author.avatar;
       element.querySelector('img').alt = 'заголовок объявления';
       fragment.appendChild(element);
     }
+    addFragment(el);
   };
 
   var createErrorBlock = function () {
@@ -53,8 +68,9 @@
   };
 
   var onSuccess = function (data) {
-    createElements(data);
-    addFragment(window.data.mapPin);
+    pins = data;
+    firstPins = data.slice(0, 5);
+    createElements(firstPins, window.data.mapPin);
   };
 
   var onError = function () {
