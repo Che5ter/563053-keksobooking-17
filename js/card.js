@@ -1,87 +1,49 @@
 'use strict';
 (function () {
-  var templatePin = document.querySelector('#pin').content.querySelector('button');
+  var templateCard = document.querySelector('#card').content.querySelector('.map__card');
   var fragment = document.createDocumentFragment();
-  var templateError = document.querySelector('#error').content.querySelector('.error');
-  var pins = [];
-  var housingType = document.querySelector('#housing-type');
-  var firstPins = [];
-
-  var updatePins = function (element) { // функция для обновления пинов на странице при фильтрации
-    var sameType = pins.filter(function (it) {
-      return it.offer.type === element;
-    });
-    sameType = sameType.slice(0, 5);
-    deletePins('.generated-pin');
-    createElements(sameType, window.data.mapPin);
-  };
-
-  var deletePins = function (someArray) { // функция для удаления пинов на странице
-    var allPins = document.querySelectorAll(someArray);
-    allPins.forEach(function (element) {
-      element.parentNode.removeChild(element);
-    });
-  };
-
-  var onSectionChangeHandler = function (evt) {
-    if (evt.target.options[0].selected) {
-      deletePins('.generated-pin');
-      createElements(firstPins, window.data.mapPin);
-    } else if (evt.target.options[1].selected) {
-      updatePins('palace');
-    } else if (evt.target.options[2].selected) {
-      updatePins('flat');
-    } else if (evt.target.options[3].selected) {
-      updatePins('house');
-    } else if (evt.target.options[4].selected) {
-      updatePins('bungalo');
-    }
-  };
-
-  housingType.addEventListener('change', onSectionChangeHandler);// отлавливаем событие изменения на section и отображаем соответствующие пины
-
-  var createElements = function (objArray, el) { // создаем и отрисовываем пины на страницу
-    for (var i = 0; i < objArray.length; i++) {
-      var element = templatePin.cloneNode(true);
-      element.style.left = objArray[i].location.x - 25 + 'px';
-      element.style.top = objArray[i].location.y - 70 + 'px';
-      element.classList.add('generated-pin');
-      element.querySelector('img').src = objArray[i].author.avatar;
-      element.querySelector('img').alt = 'заголовок объявления';
-      fragment.appendChild(element);
-    }
-    addFragment(el);
-  };
-
-  var createErrorBlock = function () {
-    var node = templateError.cloneNode(true);
-    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: black;';
-    node.style.position = 'absolute';
-    node.style.left = 0;
-    node.style.right = 0;
-    node.style.fontSize = '30px';
-    fragment.appendChild(node);
-  };
-
-  var addFragment = function (element) {
-    element.appendChild(fragment);
-  };
+  var filters = document.querySelector('.map__filters-container');
 
   var onSuccess = function (data) {
-    pins = data;
-    firstPins = data.slice(0, 5);
-    createElements(firstPins, window.data.mapPin);
+    window.card.cards = data;
+    window.card.firstCard = window.card.cards.shift();
   };
 
   var onError = function () {
-    createErrorBlock();
-    addFragment(window.data.mainDocument);
+    window.pin.createErrorBlock();
+    window.pin.addFragment(window.data.mainDocument);
   };
 
+  window.load(onSuccess, onError);
+
+  var typeAccommodation = { // для перевода слов
+    'bungalo': 'Бунгало',
+    'flat': 'Квартира',
+    'house': 'Дом',
+    'palace': 'Дворец'
+  };
+
+  var createCard = function (obj) { // создаем и отрисовываем карточку
+    var card = templateCard.cloneNode(true);
+    card.querySelector('.popup__title').textContent = obj.offer.title;
+    card.querySelector('.popup__text--address').textContent = obj.offer.address;
+    card.querySelector('.popup__text--price').textContent = obj.offer.price + '₽/ночь';
+    card.querySelector('.popup__type').textContent = typeAccommodation[obj.offer.type];
+    card.querySelector('.popup__text--capacity').textContent = obj.offer.rooms + ' комнаты для ' + obj.offer.guests + ' гостей';
+    card.querySelector('.popup__text--time').textContent = 'Заезд после ' + obj.offer.checkin + ' до ' + obj.offer.checkout;
+    card.querySelector('.popup__features ').textContent = obj.offer.features.join(', ');
+    card.querySelector('.popup__description ').textContent = obj.offer.description;
+    var photoBlock = card.querySelector('.popup__photos');
+    var photo = photoBlock.querySelector('img');
+    for (var i = 0; i < obj.offer.photos.length; i++) {
+      var nextPhoto = photo.cloneNode();
+      nextPhoto.src = obj.offer.photos[i];
+      photoBlock.appendChild(nextPhoto);
+    }
+    card.querySelector('.popup__avatar').src = obj.author.avatar;
+    window.data.map.insertBefore(card, filters);
+  };
   window.card = {
-    // generateObjectives: generateObjectives,
-    // objArray: objArray,
-    onSuccess: onSuccess,
-    onError: onError
+    createCard: createCard
   };
 })();
