@@ -28,7 +28,7 @@
       if (newPinLeft > 0 && newPinLeft < window.data.mapWidth - window.data.pinSizes.WIDTH) { // устанавливаем границы по перемещению на карте
         window.data.mainPin.style.left = newPinLeft + 'px';
       }
-      var mainPinCoords = window.data.getCoords(window.data.mainPin);
+      var mainPinCoords = window.utils.getCoords(window.data.mainPin);
       window.data.adress.value = Math.round(mainPinCoords.top) + ',' + Math.round(mainPinCoords.left);
     };
 

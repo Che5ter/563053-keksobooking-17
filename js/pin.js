@@ -4,19 +4,18 @@
   var fragment = document.createDocumentFragment();
   var templateError = document.querySelector('#error').content.querySelector('.error');
   var housingType = document.querySelector('#housing-type');
-  var firstPins = [];
+  var MAX_PIN_NUMBER = 5;
 
   var updatePins = function (element) { // функция для обновления пинов на странице при фильтрации
-    var sameType = window.pin.pins.filter(function (it) {
+    var sameType = window.data.pins.filter(function (it) {
       return it.offer.type === element;
     });
-    sameType = sameType.slice(0, 5);
-    deletePins('.generated-pin');
+    deletePins();
     createElements(sameType, window.data.mapPin);
   };
 
-  var deletePins = function (someArray) { // функция для удаления пинов на странице
-    var allPins = document.querySelectorAll(someArray);
+  var deletePins = function () { // функция для удаления пинов на странице
+    var allPins = document.querySelectorAll('.generated-pin');
     allPins.forEach(function (element) {
       element.parentNode.removeChild(element);
     });
@@ -24,22 +23,18 @@
 
   var onSectionChangeHandler = function (evt) {
     if (evt.target.options[0].selected) {
-      deletePins('.generated-pin');
-      createElements(firstPins, window.data.mapPin);
-    } else if (evt.target.options[1].selected) {
-      updatePins('palace');
-    } else if (evt.target.options[2].selected) {
-      updatePins('flat');
-    } else if (evt.target.options[3].selected) {
-      updatePins('house');
-    } else if (evt.target.options[4].selected) {
-      updatePins('bungalo');
+      deletePins();
+      createElements(window.data.pins, window.data.mapPin);
+    } else {
+      updatePins(evt.target.value);
     }
   };
 
   housingType.addEventListener('change', onSectionChangeHandler);// отлавливаем событие изменения на section и отображаем соответствующие пины
 
-  var createElements = function (objArray, el) { // создаем и отрисовываем пины на страницу
+  var createElements = function (initialArray, el) { // создаем и отрисовываем пины на страницу
+    var objArray = initialArray.slice(0, MAX_PIN_NUMBER);
+
     for (var i = 0; i < objArray.length; i++) {
       var element = templatePin.cloneNode(true);
       element.style.left = objArray[i].location.x - 25 + 'px';
@@ -67,9 +62,8 @@
   };
 
   var onSuccess = function (data) {
-    window.pin.pins = data;
-    firstPins = data.slice(0, 5);
-    createElements(firstPins, window.data.mapPin);
+    window.data.pins = data;
+    createElements(data, window.data.mapPin);
   };
 
   var onError = function () {

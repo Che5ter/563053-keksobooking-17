@@ -1,7 +1,6 @@
 'use strict';
 (function () {
   var templateCard = document.querySelector('#card').content.querySelector('.map__card');
-  var fragment = document.createDocumentFragment();
   var filters = document.querySelector('.map__filters-container');
 
   var onSuccess = function (data) {
