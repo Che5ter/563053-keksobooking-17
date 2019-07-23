@@ -3,18 +3,6 @@
   var templateCard = document.querySelector('#card').content.querySelector('.map__card');
   var filters = document.querySelector('.map__filters-container');
 
-  var onSuccess = function (data) {
-    window.card.cards = data;
-    window.card.firstCard = window.card.cards.shift();
-  };
-
-  var onError = function () {
-    window.pin.createErrorBlock();
-    window.pin.addFragment(window.data.mainDocument);
-  };
-
-  window.load(onSuccess, onError);
-
   var typeAccommodation = { // для перевода слов
     'bungalo': 'Бунгало',
     'flat': 'Квартира',
@@ -24,7 +12,6 @@
 
   var createCard = function (obj) { // создаем и отрисовываем карточку
     var card = templateCard.cloneNode(true);
-    console.log(window.data.pins);
     card.querySelector('.popup__title').textContent = obj.offer.title;
     card.querySelector('.popup__text--address').textContent = obj.offer.address;
     card.querySelector('.popup__text--price').textContent = obj.offer.price + '₽/ночь';
@@ -52,10 +39,5 @@
   window.card = {
     createCard: createCard
   };
-
-  var temp = document.querySelector('#housing-price');
-  temp.addEventListener('click', function () {
-    console.log(window.data.pins);
-  })
 
 })();

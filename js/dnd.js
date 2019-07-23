@@ -1,6 +1,7 @@
 'use strict';
 (function () {
   var shouldRenderPins = true;
+  var TIMEOUT_FOR_UPLOAD = 5000;
 
   window.data.mainPin.addEventListener('mousedown', function (evt) {
     window.map();
@@ -36,7 +37,7 @@
       if (shouldRenderPins) {
         // window.card.generateObjectives();
         window.load(window.pin.onSuccess, window.pin.onError);
-        window.card.createCard(window.card.firstCard);
+        setTimeout(window.card.createCard, TIMEOUT_FOR_UPLOAD, window.data.firstCard);
         shouldRenderPins = false;
       }
       document.removeEventListener('mousemove', onMainPinMousemoveHandler);

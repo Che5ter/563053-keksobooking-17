@@ -63,6 +63,7 @@
 
   var onSuccess = function (data) {
     window.data.pins = data;
+    window.data.firstCard = window.data.pins.shift();
     createElements(data, window.data.mapPin);
   };
 
