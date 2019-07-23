@@ -30,11 +30,14 @@
     card.querySelector('.popup__type').textContent = typeAccommodation[obj.offer.type];
     card.querySelector('.popup__text--capacity').textContent = obj.offer.rooms + ' комнаты для ' + obj.offer.guests + ' гостей';
     card.querySelector('.popup__text--time').textContent = 'Заезд после ' + obj.offer.checkin + ' до ' + obj.offer.checkout;
-    card.querySelector('.popup__features ').textContent = obj.offer.features.join(', ');
+    var features = card.querySelector('.popup__features ');
+    for (var i = 0; i < features.childElementCount; i++) {
+      features.children[i].textContent = obj.offer.features[i];
+    }
     card.querySelector('.popup__description ').textContent = obj.offer.description;
     var photoBlock = card.querySelector('.popup__photos');
     var photo = photoBlock.querySelector('img');
-    for (var i = 0; i < obj.offer.photos.length; i++) {
+    for (i = 0; i < obj.offer.photos.length; i++) {
       var nextPhoto = photo.cloneNode();
       nextPhoto.src = obj.offer.photos[i];
       photoBlock.appendChild(nextPhoto);
