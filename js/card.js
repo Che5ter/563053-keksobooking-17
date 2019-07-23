@@ -24,6 +24,7 @@
 
   var createCard = function (obj) { // создаем и отрисовываем карточку
     var card = templateCard.cloneNode(true);
+    console.log(window.data.pins);
     card.querySelector('.popup__title').textContent = obj.offer.title;
     card.querySelector('.popup__text--address').textContent = obj.offer.address;
     card.querySelector('.popup__text--price').textContent = obj.offer.price + '₽/ночь';
@@ -37,15 +38,24 @@
     card.querySelector('.popup__description ').textContent = obj.offer.description;
     var photoBlock = card.querySelector('.popup__photos');
     var photo = photoBlock.querySelector('img');
+    var clonePhoto = photo.cloneNode();
+    photoBlock.removeChild(photo);
     for (i = 0; i < obj.offer.photos.length; i++) {
-      var nextPhoto = photo.cloneNode();
-      nextPhoto.src = obj.offer.photos[i];
-      photoBlock.appendChild(nextPhoto);
+      var newPhoto = clonePhoto.cloneNode();
+      newPhoto.src = obj.offer.photos[i];
+      photoBlock.appendChild(newPhoto);
     }
     card.querySelector('.popup__avatar').src = obj.author.avatar;
     window.data.map.insertBefore(card, filters);
   };
+
   window.card = {
     createCard: createCard
   };
+
+  var temp = document.querySelector('#housing-price');
+  temp.addEventListener('click', function () {
+    console.log(window.data.pins);
+  })
+
 })();
