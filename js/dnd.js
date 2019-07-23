@@ -36,7 +36,7 @@
       if (shouldRenderPins) {
         // window.card.generateObjectives();
         window.load(window.pin.onSuccess, window.pin.onError);
-        window.card.createCard(window.card.firstCard);
+        // window.card.createCard(window.card.firstCard);
         shouldRenderPins = false;
       }
       document.removeEventListener('mousemove', onMainPinMousemoveHandler);

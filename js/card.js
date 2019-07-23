@@ -46,16 +46,12 @@
       photoBlock.appendChild(newPhoto);
     }
     card.querySelector('.popup__avatar').src = obj.author.avatar;
+    card.dataset.user = i;
     window.data.map.insertBefore(card, filters);
   };
 
   window.card = {
     createCard: createCard
   };
-
-  var temp = document.querySelector('#housing-price');
-  temp.addEventListener('click', function () {
-    console.log(window.data.pins);
-  })
 
 })();

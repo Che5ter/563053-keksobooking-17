@@ -32,6 +32,26 @@
 
   housingType.addEventListener('change', onSectionChangeHandler);// отлавливаем событие изменения на section и отображаем соответствующие пины
 
+  window.data.mapPin.addEventListener('click', function (evt) {
+    var target = evt.target;
+
+    while (target !== window.data.mapPin) {
+      if (target.classList.contains('generated-pin')) {
+        console.log(target.dataset.user);
+        if (target.dataset.user === 0) {
+          window.card.createCard(window.data.pins[0]);
+          return;
+        } else if (target.dataset.user === 1) {
+          window.card.createCard(window.data.pins[1]);
+          return;
+        }
+      }
+      target = target.parentNode;
+    }
+
+  });
+
+
   var createElements = function (initialArray, el) { // создаем и отрисовываем пины на страницу
     var objArray = initialArray.slice(0, MAX_PIN_NUMBER);
 
@@ -42,6 +62,7 @@
       element.classList.add('generated-pin');
       element.querySelector('img').src = objArray[i].author.avatar;
       element.querySelector('img').alt = 'заголовок объявления';
+      element.dataset.user = i;
       fragment.appendChild(element);
     }
     addFragment(el);
@@ -63,6 +84,7 @@
 
   var onSuccess = function (data) {
     window.data.pins = data;
+    window.data.firstCard = window.data.pins.shift();
     createElements(data, window.data.mapPin);
   };
 
@@ -77,4 +99,5 @@
     createErrorBlock: createErrorBlock,
     addFragment: addFragment
   };
+
 })();
