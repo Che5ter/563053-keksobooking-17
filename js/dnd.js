@@ -35,7 +35,6 @@
 
     var onMainPinMouseupHandler = function () {
       if (shouldRenderPins) {
-        // window.card.generateObjectives();
         window.load(window.pin.onSuccess, window.pin.onError);
         setTimeout(window.card.createCard, TIMEOUT_FOR_UPLOAD, window.data.firstCard);
         shouldRenderPins = false;
