@@ -2,7 +2,7 @@
 (function () {
   var templateCard = document.querySelector('#card').content.querySelector('.map__card');
   var filters = document.querySelector('.map__filters-container');
-
+  // var fragment = document.createDocumentFragment();
   var onSuccess = function (data) {
     window.card.cards = data;
     window.card.firstCard = window.card.cards.shift();
@@ -24,7 +24,6 @@
 
   var createCard = function (obj) { // создаем и отрисовываем карточку
     var card = templateCard.cloneNode(true);
-    console.log(window.data.pins);
     card.querySelector('.popup__title').textContent = obj.offer.title;
     card.querySelector('.popup__text--address').textContent = obj.offer.address;
     card.querySelector('.popup__text--price').textContent = obj.offer.price + '₽/ночь';
@@ -46,7 +45,6 @@
       photoBlock.appendChild(newPhoto);
     }
     card.querySelector('.popup__avatar').src = obj.author.avatar;
-    card.dataset.user = i;
     window.data.map.insertBefore(card, filters);
   };
 
