@@ -4,7 +4,7 @@
   var pinBox = window.data.mainPin.children[1]; // находим большой пин
 
 
-  var mainPinCoords = window.data.getCoords(pinBox);
+  var mainPinCoords = window.utils.getCoords(pinBox);
   window.data.adress.value = Math.round(mainPinCoords.top + window.data.MainPinSizes.HEIGHT / 2) + ',' + Math.round(mainPinCoords.left + window.data.MainPinSizes.WIDTH / 2); // добавляем координаты центра большого пина в поле адрес
 
 
