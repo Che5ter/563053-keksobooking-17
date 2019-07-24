@@ -2,18 +2,6 @@
 (function () {
   var templateCard = document.querySelector('#card').content.querySelector('.map__card');
   var filters = document.querySelector('.map__filters-container');
-  // var fragment = document.createDocumentFragment();
-  var onSuccess = function (data) {
-    window.card.cards = data;
-    window.card.firstCard = window.card.cards.shift();
-  };
-
-  var onError = function () {
-    window.pin.createErrorBlock();
-    window.pin.addFragment(window.data.mainDocument);
-  };
-
-  window.load(onSuccess, onError);
 
   var typeAccommodation = { // для перевода слов
     'bungalo': 'Бунгало',
