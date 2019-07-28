@@ -2,7 +2,7 @@
 
 (function () {
   var URL_FOR_LOAD = 'https://js.dump.academy/keksobooking/data';
-  var URL_FOR_UPLOAD = 'https://js.dump.academy/keksobookings';
+  var URL_FOR_UPLOAD = 'https://js.dump.academy/keksobooking';
 
   window.load = function (onSuccess, onError) {
     var xhr = new XMLHttpRequest();
