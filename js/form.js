@@ -5,7 +5,7 @@
 
 
   var mainPinCoords = window.utils.getCoords(pinBox);
-  window.data.adress.value = Math.round(mainPinCoords.top + window.data.MainPinSizes.HEIGHT / 2) + ',' + Math.round(mainPinCoords.left + window.data.MainPinSizes.WIDTH / 2); // добавляем координаты центра большого пина в поле адрес
+  window.data.adress.value = Math.round(mainPinCoords.top + window.data.MainPinSizes.HEIGHT / 2) + ', ' + Math.round(mainPinCoords.left + window.data.MainPinSizes.WIDTH / 2); // добавляем координаты центра большого пина в поле адрес
 
 
   var selectType = document.querySelector('#type');
@@ -44,6 +44,53 @@
     }
   };
 
-  selectTimeIn.addEventListener('change', selectInChangeHandler); // наверно есть более простая логика для реализации, хотелось бы узнать, какая :)
+  selectTimeIn.addEventListener('change', selectInChangeHandler);
   selectTimeOut.addEventListener('change', selectOutChangeHandler);
+
+  var roomNumber = document.querySelector('#room_number');
+  var guestNumber = document.querySelector('#capacity');
+
+  var onSelectChangeHandler = function (evt) { // добавляем проверку соответствия кол-во комнат - кол-во мест
+    switch (evt.target.value) {
+      case '100': guestNumber.options[3].selected = true;
+        for (var i = 0; i < guestNumber.options.length; i++) {
+          if (guestNumber.options[i].value === '0') {
+            guestNumber.options[i].disabled = false;
+          } else {
+            guestNumber.options[i].disabled = true;
+          }
+        }
+        break;
+      case '1': guestNumber.options[2].selected = true;
+        for (i = 0; i < guestNumber.options.length; i++) {
+          if (guestNumber.options[i].value === '1') {
+            guestNumber.options[i].disabled = false;
+          } else {
+            guestNumber.options[i].disabled = true;
+          }
+        }
+        break;
+      case '2': guestNumber.options[1].selected = true;
+        for (i = 0; i < guestNumber.options.length; i++) {
+          if (guestNumber.options[i].value === '1' || guestNumber.options[i].value === '2') {
+            guestNumber.options[i].disabled = false;
+          } else {
+            guestNumber.options[i].disabled = true;
+          }
+        }
+        break;
+      case '3': guestNumber.options[0].selected = true;
+        for (i = 0; i < guestNumber.options.length; i++) {
+          if (guestNumber.options[i].value === '1' || guestNumber.options[i].value === '2' || guestNumber.options[i].value === '3') {
+            guestNumber.options[i].disabled = false;
+          } else {
+            guestNumber.options[i].disabled = true;
+          }
+        }
+        break;
+    }
+  };
+
+  roomNumber.addEventListener('change', onSelectChangeHandler);
+
 })();

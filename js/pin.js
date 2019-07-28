@@ -32,20 +32,16 @@
 
   housingType.addEventListener('change', onSectionChangeHandler);// отлавливаем событие изменения на section и отображаем соответствующие пины
 
-  /*  window.data.mapPin.addEventListener('click', function (evt) {
-    var target = evt.target;
-
-    while (target !== window.data.mapPin) {
-      if (target.classList.contains('generated-pin')) {
-          window.card.createCard(window.data.firstCard);
-          return;
+  var onPinClickHandler = function (obj, element) { // передаем в создание карточки объект, из которого будем брать информацию
+    element.addEventListener('click', function () {
+      var previusElement = document.querySelector('.map__pin--active');
+      if (previusElement) {
+        previusElement.classList.remove('map__pin--active');
       }
-      target = target.parentNode;
-    }
-  }); Вешаем обработчик клика на пин, способом делегирования*/
-
-  var onPinClickHandler = function (obj) { // передаем в создание карточки объект, из которого будем брать информацию
-    window.card.createCard(obj);
+      window.card.deleteCard();
+      window.card.show(obj);
+      element.classList.add('map__pin--active');
+    });
   };
 
 
@@ -58,7 +54,7 @@
       element.classList.add('generated-pin');
       element.querySelector('img').src = objArray[i].author.avatar;
       element.querySelector('img').alt = 'заголовок объявления';
-      element.addEventListener('click', onPinClickHandler(objArray[i])); // добавляем слушатель события клика по пину
+      onPinClickHandler(objArray[i], element);
       fragment.appendChild(element);
     }
     addFragment(el);
@@ -80,7 +76,6 @@
 
   var onSuccess = function (data) {
     window.data.pins = data;
-    window.data.firstCard = window.data.pins.shift();
     createElements(data, window.data.mapPin);
   };
 
