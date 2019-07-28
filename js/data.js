@@ -13,10 +13,7 @@
       WIDTH: 65,
       HEIGHT: 65
     },
-    MainPinSizes: { // размеры большого пина
-      WIDTH: 156,
-      HEIGHT: 156
-    },
+
     MapRestrictions: { // ограничения по высоте
       TOP: 130,
       BOTTOM: 630
@@ -27,5 +24,9 @@
     mainPin: mainPin,
     mainDocument: mainDocument,
     mapWidth: map.offsetWidth, // ширина карты
+    mainPinStartCoords: {
+      left: 570,
+      top: 375
+    }
   };
 })();

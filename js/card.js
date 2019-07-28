@@ -2,6 +2,7 @@
 (function () {
   var templateCard = document.querySelector('#card').content.querySelector('.map__card');
   var filters = document.querySelector('.map__filters-container');
+  var ESC_KEY = 27;
 
   var typeAccommodation = { // для перевода слов
     'bungalo': 'Бунгало',
@@ -24,22 +25,15 @@
     card.querySelector('.popup__text--capacity').textContent = obj.offer.rooms + ' комнаты для ' + obj.offer.guests + ' гостей';
     card.querySelector('.popup__text--time').textContent = 'Заезд после ' + obj.offer.checkin + ' до ' + obj.offer.checkout;
     var featuresList = card.querySelector('.popup__features ');
-    for (var i = 0; i < featuresList.childElementCount; i++) {
-      switch (obj.offer.features[i]) {
-        case 'wifi': featuresList.children[0].textContent = 'wifi';
-          break;
-        case 'dishwasher': featuresList.children[1].textContent = 'dishwasher';
-          break;
-        case 'parking': featuresList.children[2].textContent = 'parking';
-          break;
-        case 'washer': featuresList.children[3].textContent = 'washer';
-          break;
-        case 'elevator': featuresList.children[4].textContent = 'elevator';
-          break;
-        case 'conditioner': featuresList.children[5].textContent = 'conditioner';
-          break;
-      }
+
+    featuresList.innerHTML = '';
+    for (var i = 0; i < obj.offer.features.length; i++) {
+      var li = document.createElement('li');
+      li.classList.add('popup__feature');
+      li.classList.add('popup__feature--' + obj.offer.features[i]);
+      featuresList.appendChild(li);
     }
+
     card.querySelector('.popup__description ').textContent = obj.offer.description;
     var photoBlock = card.querySelector('.popup__photos');
     var photo = photoBlock.querySelector('img');
@@ -55,19 +49,15 @@
     var popupClose = card.querySelector('.popup__close');
 
     var onPopupEscHandler = function (evt) {
-      if (evt.keyCode === 27) {
-        closePopup();
+      if (evt.keyCode === ESC_KEY) {
+        deleteCard();
       }
-    };
-
-    var closePopup = function () {
-      card.classList.add('hidden');
     };
 
     document.addEventListener('keydown', onPopupEscHandler);
 
     popupClose.addEventListener('click', function () {
-      closePopup();
+      deleteCard();
       document.removeEventListener('keydown', onPopupEscHandler);
     });
 
@@ -77,14 +67,13 @@
   var deleteCard = function () {
     if (document.querySelector('.map__card')) {
       var card = document.querySelector('.map__card');
-      card.parentNode.removeChild(card);
+      card.remove();
     }
-    return;
   };
 
   window.card = {
     show: showCard,
-    deleteCard: deleteCard
+    delete: deleteCard
   };
 
 })();
