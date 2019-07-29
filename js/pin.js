@@ -5,6 +5,8 @@
   var templateError = document.querySelector('#error').content.querySelector('.error');
   var housingType = document.querySelector('#housing-type');
   var MAX_PIN_NUMBER = 5;
+  var PIN_WIDTH = 50;
+  var PIN_HEIGHT = 70;
 
   var updatePins = function (element) { // функция для обновления пинов на странице при фильтрации
     var sameType = window.data.pins.filter(function (it) {
@@ -38,7 +40,7 @@
       if (previusElement) {
         previusElement.classList.remove('map__pin--active');
       }
-      window.card.deleteCard();
+      window.card.delete();
       window.card.show(obj);
       element.classList.add('map__pin--active');
     });
@@ -49,8 +51,8 @@
     var objArray = initialArray.slice(0, MAX_PIN_NUMBER);
     for (var i = 0; i < objArray.length; i++) {
       var element = templatePin.cloneNode(true);
-      element.style.left = objArray[i].location.x - 25 + 'px';
-      element.style.top = objArray[i].location.y - 70 + 'px';
+      element.style.left = objArray[i].location.x - PIN_WIDTH / 2 + 'px';
+      element.style.top = objArray[i].location.y - PIN_HEIGHT + 'px';
       element.classList.add('generated-pin');
       element.querySelector('img').src = objArray[i].author.avatar;
       element.querySelector('img').alt = 'заголовок объявления';
