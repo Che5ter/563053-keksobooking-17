@@ -4,7 +4,7 @@
   var filters = document.querySelector('.map__filters-container');
   var ESC_KEY = 27;
 
-  var typeAccommodation = { // для перевода слов
+  var typeAccommodationMap = { // для перевода слов
     'bungalo': 'Бунгало',
     'flat': 'Квартира',
     'house': 'Дом',
@@ -16,12 +16,12 @@
     window.data.map.insertBefore(card, filters);
   };
 
-  var createCard = function (obj) { // создаем и отрисовываем карточку
+  var createCard = function (obj) { // создаем карточку
     var card = templateCard.cloneNode(true);
     card.querySelector('.popup__title').textContent = obj.offer.title;
     card.querySelector('.popup__text--address').textContent = obj.offer.address;
     card.querySelector('.popup__text--price').textContent = obj.offer.price + '₽/ночь';
-    card.querySelector('.popup__type').textContent = typeAccommodation[obj.offer.type];
+    card.querySelector('.popup__type').textContent = typeAccommodationMap[obj.offer.type];
     card.querySelector('.popup__text--capacity').textContent = obj.offer.rooms + ' комнаты для ' + obj.offer.guests + ' гостей';
     card.querySelector('.popup__text--time').textContent = 'Заезд после ' + obj.offer.checkin + ' до ' + obj.offer.checkout;
     var featuresList = card.querySelector('.popup__features ');

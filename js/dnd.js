@@ -34,7 +34,7 @@
 
     var onMainPinMouseupHandler = function () {
       if (shouldRenderPins) {
-        window.load(window.pin.onSuccess, window.pin.onError);
+        window.backend.load(window.pin.onSuccess, window.pin.onError);
         shouldRenderPins = false;
       }
       document.removeEventListener('mousemove', onMainPinMousemoveHandler);
