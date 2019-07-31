@@ -97,6 +97,8 @@
   };
 
   var onSuccess = function () {
+    window.dnd.shouldRenderPins = true;
+
     window.data.map.classList.add('map--faded');
 
     form.reset();

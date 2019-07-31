@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  var lastTimeout;
+  var TIME_FOR_DEBOUNCE = 500;
 
   window.utils = {
     makeRandomNum: function (min, max) { // создает рандомное число в диапазоне min - max
@@ -17,6 +19,14 @@
         top: box.top + pageYOffset,
         left: box.left + pageXOffset
       };
+    },
+    debounce: function (func) {
+      if (lastTimeout) {
+        window.clearTimeout(lastTimeout);
+      }
+      lastTimeout = window.setTimeout(function () {
+        func();
+      }, TIME_FOR_DEBOUNCE);
     }
   };
 })();

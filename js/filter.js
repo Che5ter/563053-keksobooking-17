@@ -11,21 +11,9 @@
   var checkElevator = document.querySelector('#filter-elevator');
   var checkConditioner = document.querySelector('#filter-conditioner');
 
-  var TIME_FOR_DEBOUNCE = 500;
-
   var priceMap = {
     'high': 50000,
     'low': 10000
-  };
-
-  var debounceFilter = function (data) {
-    var lastTimeout;
-    if (lastTimeout) {
-      window.clearTimeout(lastTimeout);
-    }
-    lastTimeout = window.setTimeout(function () {
-      window.pin.createElements(data, window.data.mapPin);
-    }, TIME_FOR_DEBOUNCE);
   };
 
   window.filter = {
@@ -75,7 +63,10 @@
       .filter(function (it) {
         return checkConditioner.checked ? it.offer.features.indexOf(checkConditioner.value) >= 0 : dataPins;
       });
-      debounceFilter(filteredPins);
+      var createFilteredPins = function () {
+        window.pin.createElements(filteredPins, window.data.mapPin);
+      };
+      window.utils.debounce(createFilteredPins);
     }
   };
 })();

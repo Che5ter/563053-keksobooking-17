@@ -29,6 +29,7 @@
 
   var createElements = function (initialArray, el) { // создаем и отрисовываем пины на страницу
     deletePins();
+    window.card.delete();
     var objArray = initialArray.slice(0, MAX_PIN_NUMBER);
     for (var i = 0; i < objArray.length; i++) {
       var element = templatePin.cloneNode(true);

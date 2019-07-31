@@ -33,6 +33,7 @@
     };
 
     var onMainPinMouseupHandler = function () {
+      debugger;
       if (shouldRenderPins) {
         window.backend.load(window.pin.onSuccess, window.pin.onError);
         shouldRenderPins = false;
@@ -44,4 +45,7 @@
     document.addEventListener('mousemove', onMainPinMousemoveHandler);
     document.addEventListener('mouseup', onMainPinMouseupHandler);
   });
+  window.dnd = {
+    shouldRenderPins: shouldRenderPins
+  };
 })();
