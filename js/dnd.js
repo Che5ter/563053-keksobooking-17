@@ -3,7 +3,7 @@
   var shouldRenderPins = true;
 
   window.data.mainPin.addEventListener('mousedown', function (evt) {
-    window.map();
+    window.map.openMap();
 
     var startCoords = {
       x: evt.pageX,
@@ -33,9 +33,9 @@
     };
 
     var onMainPinMouseupHandler = function () {
-      if (shouldRenderPins) {
+      if (window.dnd.shouldRender) {
         window.backend.load(window.pin.onSuccess, window.pin.onError);
-        shouldRenderPins = false;
+        window.dnd.shouldRenderPins = false;
       }
       document.removeEventListener('mousemove', onMainPinMousemoveHandler);
       document.removeEventListener('mouseup', onMainPinMouseupHandler);
@@ -45,6 +45,6 @@
     document.addEventListener('mouseup', onMainPinMouseupHandler);
   });
   window.dnd = {
-    shouldRenderPins: shouldRenderPins
+    shouldRender: shouldRenderPins
   };
 })();

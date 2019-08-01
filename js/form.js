@@ -5,7 +5,6 @@
   window.data.adress.value = Math.round(mainPinCoords.top + window.data.pinSizes.HEIGHT / 2) + ', ' + Math.round(mainPinCoords.left + window.data.pinSizes.WIDTH / 2); // добавляем координаты центра большого пина в поле адрес
   var successBlock = document.querySelector('#success').content.querySelector('.success').cloneNode(true);
   var templateError = document.querySelector('#error').content.querySelector('.error');
-  var ESC_KEY = 27;
   var form = document.querySelector('.ad-form');
   var filterForm = document.querySelector('.map__filters');
   var selectType = document.querySelector('#type');
@@ -13,6 +12,7 @@
   var filters = document.querySelectorAll('.map__filter');
   var fieldsets = document.querySelectorAll('fieldset');
   var headerUpload = document.querySelector('.ad-form-header__input');
+  var resetButton = document.querySelector('.ad-form__reset');
 
   var typePriceMap = {
     'bungalo': 0,
@@ -21,7 +21,7 @@
     'palace': 10000
   };
 
-  var selectTypeChangeHandler = function () {
+  var selectTypeChangeHandler = function () { // синхронизируем плейсхолдер с типом жилья
     inputPrice.placeholder = typePriceMap[selectType.value];
     inputPrice.min = typePriceMap[selectType.value];
   };
@@ -31,7 +31,7 @@
   var selectTimeIn = document.querySelector('#timein');
   var selectTimeOut = document.querySelector('#timeout');
 
-  var selectInChangeHandler = function () {
+  var selectInChangeHandler = function () { // синхронизируем дату заезда и выезда
     for (var i = 0; i < selectTimeIn.length; i++) {
       if (selectTimeIn[i].selected) {
         selectTimeOut[i].selected = true;
@@ -39,7 +39,7 @@
     }
   };
 
-  var selectOutChangeHandler = function () {
+  var selectOutChangeHandler = function () { // синхронизируем дату заезда и выезда
     for (var i = 0; i < selectTimeOut.length; i++) {
       if (selectTimeOut[i].selected) {
         selectTimeIn[i].selected = true;
@@ -60,7 +60,7 @@
     100: [0]
   };
 
-  var onSelectChangeHandler = function (evt) {
+  var onSelectChangeHandler = function (evt) { // синхронизируем кол-во комнат с кол-вом мест
     for (var i = 0; i < guestNumber.length; i++) {
       guestNumber[i].disabled = true;
     }
@@ -79,25 +79,25 @@
 
   roomNumber.addEventListener('change', onSelectChangeHandler);
 
-  var makeStartPositionPin = function () {
+  var makeStartPositionPin = function () { // ставим пин в изначальное положение
     window.data.mainPin.style.left = window.data.mainPinStartCoords.left + 'px';
     window.data.mainPin.style.top = window.data.mainPinStartCoords.top + 'px';
   };
 
-  var disableFilters = function () {
+  var disableFilters = function () { // отключаем фильтры
     for (var i = 0; i < filters.length; i++) {
       filters[i].disabled = true;
     }
   };
 
-  var disableFormFields = function () {
+  var disableFormFields = function () { // отключаем поля формы
     for (var i = 0; i < fieldsets.length; i++) {
       fieldsets[i].disabled = true;
     }
   };
 
-  var onSuccess = function () {
-    window.dnd.shouldRenderPins = true;
+  var makeDefaultState = function () { // возвращаем страницу в изначальное состояние
+    window.dnd.shouldRender = true;
 
     window.data.map.classList.add('map--faded');
 
@@ -105,7 +105,7 @@
 
     form.classList.add('ad-form--disabled');
 
-    window.pin.deletePins();
+    window.pin.delete();
 
     window.card.delete();
 
@@ -118,6 +118,14 @@
     disableFormFields();
 
     headerUpload.disabled = true;
+  };
+
+  var onResetClickHandler = function () {
+    makeDefaultState();
+  };
+
+  var onSuccess = function () {
+    makeDefaultState();
 
     window.data.mainDocument.appendChild(successBlock);
 
@@ -125,8 +133,8 @@
       successBlock.remove();
     };
 
-    var onDocumentKeypressHandler = function (evt) {
-      if (evt.keyCode === ESC_KEY) {
+    var onDocumentKeypressHandler = function () {
+      if (window.utils.isEscPressed) {
         successBlock.remove();
       }
     };
@@ -144,8 +152,8 @@
       errorBlock.remove();
     };
 
-    var onDocumentKeypressHandler = function (evt) {
-      if (evt.keyCode === ESC_KEY) {
+    var onDocumentKeypressHandler = function () {
+      if (window.utils.isEscPressed) {
         errorBlock.remove();
       }
     };
@@ -169,5 +177,11 @@
     window.backend.upload(new FormData(form), onSuccess, onError);
     evt.preventDefault();
   });
+
+  resetButton.addEventListener('click', onResetClickHandler);
+
+  window.form = {
+    defaultState: makeDefaultState
+  };
 
 })();

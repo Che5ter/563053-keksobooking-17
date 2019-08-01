@@ -3,6 +3,8 @@
 (function () {
   var lastTimeout;
   var TIME_FOR_DEBOUNCE = 500;
+  var ENTER_KEYCODE = 13;
+  var ESC_KEYCODE = 27;
 
   window.utils = {
     makeRandomNum: function (min, max) { // создает рандомное число в диапазоне min - max
@@ -27,6 +29,12 @@
       lastTimeout = window.setTimeout(function () {
         func();
       }, TIME_FOR_DEBOUNCE);
+    },
+    isEnterPressed: function (evt) {
+      return evt.keyCode === ENTER_KEYCODE;
+    },
+    isEscPressed: function (evt) {
+      return evt.keyCode === ESC_KEYCODE;
     }
   };
 })();
