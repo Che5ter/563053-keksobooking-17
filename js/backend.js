@@ -5,7 +5,7 @@
   var URL_FOR_UPLOAD = 'https://js.dump.academy/keksobooking';
   var SUCCESS_CODE = 200;
 
-  var load = function (onSuccess, onError) {
+  var loadData = function (onSuccess, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
 
@@ -21,7 +21,7 @@
     xhr.send();
   };
 
-  var upload = function (data, onSuccess, onError) {
+  var uploadData = function (data, onSuccess, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
 
@@ -38,7 +38,7 @@
   };
 
   window.backend = {
-    load: load,
-    upload: upload
+    load: loadData,
+    upload: uploadData
   };
 })();
