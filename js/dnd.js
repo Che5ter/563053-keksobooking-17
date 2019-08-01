@@ -33,7 +33,6 @@
     };
 
     var onMainPinMouseupHandler = function () {
-      debugger;
       if (shouldRenderPins) {
         window.backend.load(window.pin.onSuccess, window.pin.onError);
         shouldRenderPins = false;
