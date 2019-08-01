@@ -3,12 +3,16 @@
 
   var mainPinCoords = window.utils.getCoords(window.data.mainPin);
   window.data.adress.value = Math.round(mainPinCoords.top + window.data.pinSizes.HEIGHT / 2) + ', ' + Math.round(mainPinCoords.left + window.data.pinSizes.WIDTH / 2); // добавляем координаты центра большого пина в поле адрес
-  var templateSuccess = document.querySelector('#success').content.querySelector('.success');
+  var successBlock = document.querySelector('#success').content.querySelector('.success').cloneNode(true);
   var templateError = document.querySelector('#error').content.querySelector('.error');
   var ESC_KEY = 27;
-
+  var form = document.querySelector('.ad-form');
+  var filterForm = document.querySelector('.map__filters');
   var selectType = document.querySelector('#type');
   var inputPrice = document.querySelector('#price');
+  var filters = document.querySelectorAll('.map__filter');
+  var fieldsets = document.querySelectorAll('fieldset');
+  var headerUpload = document.querySelector('.ad-form-header__input');
 
   var typePriceMap = {
     'bungalo': 0,
@@ -64,7 +68,6 @@
     var validValues = guestNumberMap[currentValue];
 
     for (var j = 0; j < validValues.length; j++) {
-      // guestNumber.querySelector(`option[value="${validValues[j]}"]`).disabled = false;
       for (var k = 0; k < guestNumber.children.length; k++) {
         if (Number(guestNumber.children[k].value) === validValues[j]) {
           guestNumber[k].disabled = false;
@@ -76,48 +79,55 @@
 
   roomNumber.addEventListener('change', onSelectChangeHandler);
 
-  var onSuccess = function () {
-    window.data.map.classList.add('map--faded');
-    form.reset();
-    form.classList.add('ad-form--disabled');
-    var pins = document.querySelectorAll('.generated-pin');
-    pins.forEach(function (element) {
-      element.remove();
-    });
-    var card = document.querySelector('.map__card');
-    if (card) {
-      card.remove();
-    }
+  var makeStartPositionPin = function () {
     window.data.mainPin.style.left = window.data.mainPinStartCoords.left + 'px';
     window.data.mainPin.style.top = window.data.mainPinStartCoords.top + 'px';
-    window.data.adress.value = Math.round(mainPinCoords.top + window.data.pinSizes.HEIGHT / 2) + ', ' + Math.round(mainPinCoords.left + window.data.pinSizes.WIDTH / 2);
+  };
 
-    var filters = document.querySelectorAll('.map__filter');
+  var disableFilters = function () {
     for (var i = 0; i < filters.length; i++) {
       filters[i].disabled = true;
     }
+  };
 
-    var fieldsets = document.querySelectorAll('fieldset');
-    for (i = 0; i < fieldsets.length; i++) {
+  var disableFormFields = function () {
+    for (var i = 0; i < fieldsets.length; i++) {
       fieldsets[i].disabled = true;
     }
-    var headerUpload = document.querySelector('.ad-form-header__input');
+  };
+
+  var onSuccess = function () {
+    window.dnd.shouldRenderPins = true;
+
+    window.data.map.classList.add('map--faded');
+
+    form.reset();
+
+    form.classList.add('ad-form--disabled');
+
+    window.pin.deletePins();
+
+    window.card.delete();
+
+    makeStartPositionPin();
+
+    window.data.adress.value = Math.round(mainPinCoords.top + window.data.pinSizes.HEIGHT / 2) + ', ' + Math.round(mainPinCoords.left + window.data.pinSizes.WIDTH / 2);
+
+    disableFilters();
+
+    disableFormFields();
+
     headerUpload.disabled = true;
 
-    var successBlock = templateSuccess.cloneNode(true);
     window.data.mainDocument.appendChild(successBlock);
 
     var onDocumentClickHandler = function () {
       successBlock.remove();
-      document.removeEventListener('onDocumentClickHandler');
-      document.removeEventListener('onDocumentKeypressHandler');
     };
 
     var onDocumentKeypressHandler = function (evt) {
       if (evt.keyCode === ESC_KEY) {
         successBlock.remove();
-        document.removeEventListener('onDocumentKeypressHandler');
-        document.removeEventListener('onDocumentClickHandler');
       }
     };
 
@@ -132,15 +142,11 @@
 
     var onDocumentClickHandler = function () {
       errorBlock.remove();
-      document.removeEventListener('onDocumentClickHandler');
-      document.removeEventListener('onDocumentKeypressHandler');
     };
 
     var onDocumentKeypressHandler = function (evt) {
       if (evt.keyCode === ESC_KEY) {
         errorBlock.remove();
-        document.removeEventListener('onDocumentKeypressHandler');
-        document.removeEventListener('onDocumentClickHandler');
       }
     };
 
@@ -152,10 +158,15 @@
     document.addEventListener('keydown', onDocumentKeypressHandler);
   };
 
-  var form = document.querySelector('.ad-form');
+  filterForm.addEventListener('click', function (evt) {
+    var target = evt.target;
+    target.addEventListener('change', function () {
+      window.filter.filtering(window.data.pins);
+    });
+  });
 
   form.addEventListener('submit', function (evt) {
-    window.upload(new FormData(form), onSuccess, onError);
+    window.backend.upload(new FormData(form), onSuccess, onError);
     evt.preventDefault();
   });
 
