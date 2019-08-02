@@ -44,6 +44,7 @@
     document.addEventListener('mousemove', onMainPinMousemoveHandler);
     document.addEventListener('mouseup', onMainPinMouseupHandler);
   });
+
   window.dnd = {
     shouldRender: shouldRenderPins
   };

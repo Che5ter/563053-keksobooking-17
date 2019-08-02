@@ -14,6 +14,8 @@
   var headerUpload = document.querySelector('.ad-form-header__input');
   var resetButton = document.querySelector('.ad-form__reset');
 
+  var DEFAULT_PHOTO_PREVIEW = 'img/muffin-grey.svg';
+
   var typePriceMap = {
     'bungalo': 0,
     'flat': 1000,
@@ -96,6 +98,16 @@
     }
   };
 
+  var clearPhotos = function () {
+    window.photoPreview.previewAvatar.children[0].src = DEFAULT_PHOTO_PREVIEW;
+    var apartmentsPhoto = window.photoPreview.previewApartmentsBlock.querySelectorAll('img');
+    if (apartmentsPhoto) {
+      apartmentsPhoto.forEach(function (photo) {
+        photo.remove();
+      });
+    }
+  };
+
   var makeDefaultState = function () { // возвращаем страницу в изначальное состояние
     window.dnd.shouldRender = true;
 
@@ -108,6 +120,8 @@
     window.pin.delete();
 
     window.card.delete();
+
+    clearPhotos();
 
     makeStartPositionPin();
 
