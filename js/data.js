@@ -9,7 +9,7 @@
 
   window.data = {
     PIN_NUMBER: 8, // количество объектов, которое нужно создать
-    pinSizes: {
+    PinSizes: {
       WIDTH: 65,
       HEIGHT: 65
     },

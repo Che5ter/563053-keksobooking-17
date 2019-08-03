@@ -1,7 +1,7 @@
 'use strict';
 (function () {
   window.map = {
-    openMap: function () { // открываем карту и делаем доступной форму подачи объявления
+    open: function () { // открываем карту и делаем доступной форму подачи объявления
       window.data.map.classList.remove('map--faded');
       var form = document.querySelector('.ad-form');
       form.classList.remove('ad-form--disabled');

@@ -3,7 +3,7 @@
   var shouldRenderPins = true;
 
   window.data.mainPin.addEventListener('mousedown', function (evt) {
-    window.map.openMap();
+    window.map.open();
 
     var startCoords = {
       x: evt.pageX,
@@ -22,10 +22,10 @@
       };
       var newPinTop = window.data.mainPin.offsetTop - shift.y;
       var newPinLeft = window.data.mainPin.offsetLeft - shift.x;
-      if (newPinTop > window.data.MapRestrictions.TOP && newPinTop < window.data.MapRestrictions.BOTTOM - window.data.pinSizes.HEIGHT) { // устанавливаем границы по перемещению на карте
+      if (newPinTop > window.data.MapRestrictions.TOP && newPinTop < window.data.MapRestrictions.BOTTOM - window.data.PinSizes.HEIGHT) { // устанавливаем границы по перемещению на карте
         window.data.mainPin.style.top = newPinTop + 'px';
       }
-      if (newPinLeft > 0 && newPinLeft < window.data.mapWidth - window.data.pinSizes.WIDTH) { // устанавливаем границы по перемещению на карте
+      if (newPinLeft > 0 && newPinLeft < window.data.mapWidth - window.data.PinSizes.WIDTH) { // устанавливаем границы по перемещению на карте
         window.data.mainPin.style.left = newPinLeft + 'px';
       }
       var mainPinCoords = window.utils.getCoords(window.data.mainPin);
@@ -35,7 +35,7 @@
     var onMainPinMouseupHandler = function () {
       if (window.dnd.shouldRender) {
         window.backend.load(window.pin.onSuccess, window.pin.onError);
-        window.dnd.shouldRenderPins = false;
+        window.dnd.shouldRender = false;
       }
       document.removeEventListener('mousemove', onMainPinMousemoveHandler);
       document.removeEventListener('mouseup', onMainPinMouseupHandler);
