@@ -4,7 +4,7 @@
   var mainPin = document.querySelector('.map__pin--main');
   var map = document.querySelector('.map');
   var mapPin = document.querySelector('.map__pins');
-  var adress = document.querySelector('#address');
+  var address = document.querySelector('#address');
   var mainDocument = document.querySelector('main');
 
   window.data = {
@@ -19,7 +19,7 @@
       BOTTOM: 630
     },
     map: map,
-    adress: adress,
+    address: address,
     mapPin: mapPin,
     mainPin: mainPin,
     mainDocument: mainDocument,

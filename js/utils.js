@@ -3,7 +3,6 @@
 (function () {
   var lastTimeout;
   var TIME_FOR_DEBOUNCE = 500;
-  var ENTER_KEYCODE = 13;
   var ESC_KEYCODE = 27;
 
   window.utils = {
@@ -11,9 +10,6 @@
       var rand = min + Math.random() * (max + 1 - min);
       rand = Math.floor(rand);
       return rand;
-    },
-    getRandomValuefromArray: function (arr) {
-      return arr[this.makeRandomNum(0, arr.length - 1)];
     },
     getCoords: function (elem) { // находим координаты элемента на странице
       var box = elem.getBoundingClientRect();
@@ -29,9 +25,6 @@
       lastTimeout = window.setTimeout(function () {
         func();
       }, TIME_FOR_DEBOUNCE);
-    },
-    isEnterPressed: function (evt) {
-      return evt.keyCode === ENTER_KEYCODE;
     },
     isEscPressed: function (evt) {
       return evt.keyCode === ESC_KEYCODE;

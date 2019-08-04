@@ -80,8 +80,6 @@
   window.pin = {
     onSuccess: onSuccessPin,
     onError: onErrorPin,
-    createErrorBlock: createErrorBlockPin,
-    addFragment: addFragmentPin,
     createElements: createElementsPin,
     delete: deletePins
   };

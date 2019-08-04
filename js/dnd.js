@@ -29,7 +29,7 @@
         window.data.mainPin.style.left = newPinLeft + 'px';
       }
       var mainPinCoords = window.utils.getCoords(window.data.mainPin);
-      window.data.adress.value = Math.round(mainPinCoords.top) + ', ' + Math.round(mainPinCoords.left);
+      window.data.address.value = Math.round(mainPinCoords.top) + ', ' + Math.round(mainPinCoords.left);
     };
 
     var onMainPinMouseupHandler = function () {

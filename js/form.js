@@ -2,7 +2,7 @@
 (function () {
 
   var mainPinCoords = window.utils.getCoords(window.data.mainPin);
-  window.data.adress.value = Math.round(mainPinCoords.top + window.data.PinSizes.HEIGHT / 2) + ', ' + Math.round(mainPinCoords.left + window.data.PinSizes.WIDTH / 2); // добавляем координаты центра большого пина в поле адрес
+  window.data.address.value = Math.round(mainPinCoords.top + window.data.PinSizes.HEIGHT / 2) + ', ' + Math.round(mainPinCoords.left + window.data.PinSizes.WIDTH / 2); // добавляем координаты центра большого пина в поле адрес
   var successBlock = document.querySelector('#success').content.querySelector('.success').cloneNode(true);
   var templateError = document.querySelector('#error').content.querySelector('.error');
   var form = document.querySelector('.ad-form');
@@ -125,7 +125,7 @@
 
     makeStartPositionPin();
 
-    window.data.adress.value = Math.round(mainPinCoords.top + window.data.PinSizes.HEIGHT / 2) + ', ' + Math.round(mainPinCoords.left + window.data.PinSizes.WIDTH / 2);
+    window.data.address.value = Math.round(mainPinCoords.top + window.data.PinSizes.HEIGHT / 2) + ', ' + Math.round(mainPinCoords.left + window.data.PinSizes.WIDTH / 2);
 
     disableFilters();
 
